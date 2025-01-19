@@ -3,94 +3,247 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minha Agenda</title>
+    <title>Agenda Moderna</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
     <style>
-        .agenda-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
         }
 
-        .agenda-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .compromissos {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 15px;
-        }
-
-        .novo-compromisso {
-            margin-bottom: 20px;
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
         }
 
         .compromisso-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px;
-            border-bottom: 1px solid #eee;
+            transition: all 0.3s ease;
         }
 
         .compromisso-item:hover {
-            background-color: #f5f5f5;
+            transform: translateY(-2px);
+        }
+
+        .categoria-badge {
+            transition: all 0.3s ease;
+        }
+
+        .categoria-badge:hover {
+            transform: scale(1.05);
+        }
+
+        .animate-slide-in {
+            animation: slideIn 0.5s ease-out forwards;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .botao-adicionar {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .botao-adicionar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        select, input {
+            padding: 8px;
+            border: 1px solid #ddd;
             border-radius: 4px;
+        }
+
+        /* Estilo para as opções do select */
+        select option {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 8px;
+        }
+
+        /* Ajuste para o select em si */
+        select {
+            background-color: rgba(255, 255, 255, 0.1);
             cursor: pointer;
         }
     </style>
 </head>
-<body>
-    <div class="agenda-container">
-        <div class="agenda-header">
-            <h1>Minha Agenda</h1>
-            <p>Data: <span id="data-atual"></span></p>
+<body class="p-4">
+    <div class="max-w-4xl mx-auto glass-effect rounded-2xl p-8 animate__animated animate__fadeIn">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-white mb-2">Minha Agenda</h1>
+            <p class="text-white/80">Data: <span id="data-atual" class="font-medium"></span></p>
         </div>
 
-        <div class="novo-compromisso">
-            <input type="text" id="titulo" placeholder="Título do compromisso">
-            <input type="datetime-local" id="horario">
-            <button class="botao-adicionar" onclick="adicionarCompromisso()">Adicionar</button>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <input type="text" id="titulo" placeholder="Título do compromisso" 
+                   class="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500">
+            
+            <input type="datetime-local" id="horario" 
+                   class="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500">
+            
+            <select id="categoria" 
+                    class="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 appearance-none cursor-pointer">
+                <option value="trabalho" class="bg-gray-800">Trabalho</option>
+                <option value="pessoal" class="bg-gray-800">Pessoal</option>
+                <option value="estudos" class="bg-gray-800">Estudos</option>
+                <option value="outros" class="bg-gray-800">Outros</option>
+            </select>
+
+            <button onclick="adicionarCompromisso()" 
+                    class="botao-adicionar bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-lg flex items-center justify-center gap-2">
+                <i class="ri-add-line"></i>
+                Adicionar
+            </button>
         </div>
 
-        <div class="compromissos" id="lista-compromissos">
+        <div id="lista-compromissos" class="space-y-4">
             <!-- Compromissos serão adicionados aqui -->
         </div>
     </div>
 
     <script>
-        // Atualiza a data atual
-        document.getElementById('data-atual').textContent = new Date().toLocaleDateString('pt-BR');
+        // Atualiza a data atual com formato mais elegante
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('data-atual').textContent = new Date().toLocaleDateString('pt-BR', options);
+
+        // Carrega compromissos do localStorage
+        let compromissos = JSON.parse(localStorage.getItem('compromissos')) || [];
+        
+        // Renderiza compromissos salvos
+        window.onload = function() {
+            compromissos.forEach(comp => {
+                criarElementoCompromisso(comp);
+            });
+        }
 
         function adicionarCompromisso() {
             const titulo = document.getElementById('titulo').value;
             const horario = document.getElementById('horario').value;
+            const categoria = document.getElementById('categoria').value;
             
             if (!titulo || !horario) {
-                alert('Por favor, preencha todos os campos!');
+                Swal.fire({
+                    title: 'Ops!',
+                    text: 'Por favor, preencha todos os campos!',
+                    icon: 'warning',
+                    confirmButtonColor: '#9333ea'
+                });
                 return;
             }
 
-            const compromisso = document.createElement('div');
-            compromisso.className = 'compromisso-item';
-            compromisso.innerHTML = `
-                <span>${titulo}</span>
-                <span>${new Date(horario).toLocaleString('pt-BR')}</span>
-                <button onclick="this.parentElement.remove()">Excluir</button>
-            `;
+            const novoCompromisso = {
+                id: Date.now(),
+                titulo,
+                horario,
+                categoria
+            };
 
-            document.getElementById('lista-compromissos').appendChild(compromisso);
+            compromissos.push(novoCompromisso);
+            salvarCompromissos();
+            criarElementoCompromisso(novoCompromisso);
             
             // Limpa os campos
             document.getElementById('titulo').value = '';
             document.getElementById('horario').value = '';
+
+            // Notificação de sucesso
+            Swal.fire({
+                title: 'Sucesso!',
+                text: 'Compromisso adicionado com sucesso!',
+                icon: 'success',
+                confirmButtonColor: '#9333ea',
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }
+
+        function criarElementoCompromisso(compromisso) {
+            const elemento = document.createElement('div');
+            elemento.className = 'compromisso-item glass-effect rounded-xl p-4 animate-slide-in';
+            
+            const categoriasCores = {
+                trabalho: 'from-green-400 to-green-600',
+                pessoal: 'from-blue-400 to-blue-600',
+                estudos: 'from-purple-400 to-purple-600',
+                outros: 'from-gray-400 to-gray-600'
+            };
+
+            elemento.innerHTML = `
+                <div class="flex items-center justify-between gap-4">
+                    <span class="categoria-badge px-3 py-1 rounded-full text-sm font-medium text-white bg-gradient-to-r ${categoriasCores[compromisso.categoria]}">
+                        ${compromisso.categoria}
+                    </span>
+                    <span class="text-white font-medium flex-grow">${compromisso.titulo}</span>
+                    <span class="text-white/80 text-sm">${new Date(compromisso.horario).toLocaleString('pt-BR')}</span>
+                    <button onclick="confirmarExclusao(${compromisso.id})" 
+                            class="text-white/80 hover:text-red-400 transition-colors">
+                        <i class="ri-delete-bin-line text-xl"></i>
+                    </button>
+                </div>
+            `;
+
+            document.getElementById('lista-compromissos').appendChild(elemento);
+        }
+
+        function confirmarExclusao(id) {
+            Swal.fire({
+                title: 'Tem certeza?',
+                text: "Você não poderá reverter esta ação!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#9333ea',
+                confirmButtonText: 'Sim, excluir!',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    excluirCompromisso(id);
+                    Swal.fire({
+                        title: 'Excluído!',
+                        text: 'Seu compromisso foi excluído.',
+                        icon: 'success',
+                        confirmButtonColor: '#9333ea',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                }
+            });
+        }
+
+        function excluirCompromisso(id) {
+            compromissos = compromissos.filter(comp => comp.id !== id);
+            salvarCompromissos();
+            atualizarListaCompromissos();
+        }
+
+        function salvarCompromissos() {
+            localStorage.setItem('compromissos', JSON.stringify(compromissos));
+        }
+
+        function atualizarListaCompromissos() {
+            const lista = document.getElementById('lista-compromissos');
+            lista.innerHTML = '';
+            compromissos.forEach(comp => {
+                criarElementoCompromisso(comp);
+            });
         }
     </script>
 </body>
