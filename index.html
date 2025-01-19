@@ -4,22 +4,97 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agenda Moderna</title>
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📅</text></svg>">
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@5/dark.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Remix Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/pt-br.js'></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                45deg,
+                #667eea,
+                #764ba2,
+                #6B8DD6,
+                #8E37D7
+            );
+            background-size: 400% 400%;
+            z-index: -1;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Adiciona partículas flutuantes */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100vw) rotate(360deg);
+                opacity: 0;
+            }
         }
 
         .glass-effect {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
@@ -83,32 +158,307 @@
             background-color: rgba(255, 255, 255, 0.1);
             cursor: pointer;
         }
+
+        /* Header Block */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+        }
+
+        .header__nav {
+            max-width: 80rem;
+            margin: 0 auto;
+            padding: 0.75rem 1rem;
+        }
+
+        .header__logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header__logo-icon {
+            font-size: 1.875rem;
+            color: white;
+        }
+
+        .header__logo-text {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .header__menu {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .header__menu-item {
+            color: rgba(255, 255, 255, 0.8);
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header__menu-item:hover {
+            color: white;
+        }
+
+        /* Agenda Block */
+        .agenda {
+            max-width: 56rem;
+            margin: 0 auto;
+        }
+
+        .agenda__header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .agenda__title {
+            font-size: 2.25rem;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .agenda__form {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .agenda__input {
+            width: 100%;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .agenda__input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .agenda__input:focus {
+            outline: none;
+            ring: 2px;
+            ring-color: rgb(147, 51, 234);
+        }
+
+        .agenda__button {
+            background: linear-gradient(to right, rgb(168, 85, 247), rgb(236, 72, 153));
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .agenda__button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Compromisso Block */
+        .compromisso {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+
+        .compromisso:hover {
+            transform: translateY(-2px);
+        }
+
+        .compromisso__content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .compromisso__categoria {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: white;
+        }
+
+        .compromisso__categoria--trabalho {
+            background: linear-gradient(to right, rgb(74, 222, 128), rgb(22, 163, 74));
+        }
+
+        .compromisso__categoria--pessoal {
+            background: linear-gradient(to right, rgb(96, 165, 250), rgb(37, 99, 235));
+        }
+
+        .compromisso__categoria--estudos {
+            background: linear-gradient(to right, rgb(192, 132, 252), rgb(147, 51, 234));
+        }
+
+        .compromisso__categoria--outros {
+            background: linear-gradient(to right, rgb(148, 163, 184), rgb(71, 85, 105));
+        }
+
+        .compromisso__titulo {
+            color: white;
+            font-weight: 500;
+            flex-grow: 1;
+        }
+
+        .compromisso__horario {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.875rem;
+        }
+
+        .compromisso__delete {
+            color: rgba(255, 255, 255, 0.8);
+            transition: color 0.3s;
+        }
+
+        .compromisso__delete:hover {
+            color: rgb(248, 113, 113);
+        }
+
+        /* Variáveis de tema */
+        :root {
+            --bg-gradient-1: #667eea;
+            --bg-gradient-2: #764ba2;
+            --bg-gradient-3: #6B8DD6;
+            --bg-gradient-4: #8E37D7;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        [data-theme="light"] {
+            --bg-gradient-1: #64B5F6;
+            --bg-gradient-2: #2196F3;
+            --bg-gradient-3: #1976D2;
+            --bg-gradient-4: #0D47A1;
+            --text-primary: #1a1a1a;
+            --text-secondary: rgba(0, 0, 0, 0.7);
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        body::before {
+            background: linear-gradient(
+                45deg,
+                var(--bg-gradient-1),
+                var(--bg-gradient-2),
+                var(--bg-gradient-3),
+                var(--bg-gradient-4)
+            );
+        }
+
+        .glass-effect {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+        }
+
+        /* Novo botão de tema */
+        .theme-toggle {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* Estilos do Calendário */
+        .calendar-container {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: var(--glass-bg);
+            border-radius: 0.75rem;
+            border: 1px solid var(--glass-border);
+        }
+
+        .fc {
+            background: var(--glass-bg);
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+
+        .fc-theme-standard td, 
+        .fc-theme-standard th,
+        .fc-theme-standard .fc-scrollgrid {
+            border-color: var(--glass-border);
+        }
+
+        .fc-daygrid-day-number,
+        .fc-col-header-cell-cushion {
+            color: var(--text-primary);
+        }
+
+        .fc-daygrid-event {
+            background: linear-gradient(to right, var(--bg-gradient-1), var(--bg-gradient-2));
+            border: none;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        .fc-day-today {
+            background: rgba(var(--bg-gradient-1), 0.1) !important;
+        }
     </style>
 </head>
 <body class="p-4">
+    <!-- Partículas de fundo -->
+    <div class="particles" id="particles"></div>
+
     <!-- Header -->
-    <header class="fixed top-0 left-0 right-0 z-50 glass-effect">
-        <nav class="max-w-7xl mx-auto px-4 py-3">
+    <header class="header glass-effect">
+        <nav class="header__nav">
             <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <i class="ri-calendar-2-fill text-3xl text-white"></i>
-                    <span class="text-xl font-bold text-white">AgendaPro</span>
+                <div class="header__logo">
+                    <i class="ri-calendar-2-fill header__logo-icon"></i>
+                    <span class="header__logo-text">AgendaPro</span>
                 </div>
                 
-                <div class="flex items-center gap-6">
-                    <a href="#" class="text-white/80 hover:text-white transition-colors flex items-center gap-2">
+                <div class="header__menu">
+                    <button class="theme-toggle" onclick="toggleTheme()" title="Alternar Tema">
+                        <i class="ri-sun-line" id="theme-icon"></i>
+                    </button>
+                    <a href="#" class="header__menu-item">
                         <i class="ri-home-4-line"></i>
                         <span>Início</span>
                     </a>
-                    <a href="#" class="text-white/80 hover:text-white transition-colors flex items-center gap-2">
+                    <a href="#" class="header__menu-item">
                         <i class="ri-calendar-line"></i>
                         <span>Calendário</span>
                     </a>
-                    <a href="#" class="text-white/80 hover:text-white transition-colors flex items-center gap-2">
+                    <a href="#" class="header__menu-item">
                         <i class="ri-settings-4-line"></i>
                         <span>Configurações</span>
                     </a>
-                    <button class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
+                    <button class="header__menu-item header__menu-item--button">
                         <i class="ri-user-line"></i>
                         <span>Perfil</span>
                     </button>
@@ -121,35 +471,38 @@
     <div class="h-20"></div>
 
     <!-- Conteúdo principal -->
-    <div class="max-w-4xl mx-auto glass-effect rounded-2xl p-8 animate__animated animate__fadeIn">
-        <div class="text-center mb-8">
-            <h1 class="text-4xl font-bold text-white mb-2">Minha Agenda</h1>
+    <div class="agenda glass-effect rounded-2xl p-8 animate__animated animate__fadeIn">
+        <div class="agenda__header">
+            <h1 class="agenda__title">Minha Agenda</h1>
             <p class="text-white/80">Data: <span id="data-atual" class="font-medium"></span></p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <div class="agenda__form">
             <input type="text" id="titulo" placeholder="Título do compromisso" 
-                   class="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                   class="agenda__input">
             
             <input type="datetime-local" id="horario" 
-                   class="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500">
+                   class="agenda__input">
             
-            <select id="categoria" 
-                    class="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 appearance-none cursor-pointer">
-                <option value="trabalho" class="bg-gray-800">Trabalho</option>
-                <option value="pessoal" class="bg-gray-800">Pessoal</option>
-                <option value="estudos" class="bg-gray-800">Estudos</option>
-                <option value="outros" class="bg-gray-800">Outros</option>
+            <select id="categoria" class="agenda__input">
+                <option value="trabalho">Trabalho</option>
+                <option value="pessoal">Pessoal</option>
+                <option value="estudos">Estudos</option>
+                <option value="outros">Outros</option>
             </select>
 
-            <button onclick="adicionarCompromisso()" 
-                    class="botao-adicionar bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-lg flex items-center justify-center gap-2">
+            <button onclick="adicionarCompromisso()" class="agenda__button">
                 <i class="ri-add-line"></i>
                 Adicionar
             </button>
         </div>
 
-        <div id="lista-compromissos" class="space-y-4">
+        <!-- Calendário -->
+        <div class="calendar-container">
+            <div id="calendar"></div>
+        </div>
+
+        <div id="lista-compromissos" class="agenda__lista">
             <!-- Compromissos serão adicionados aqui -->
         </div>
     </div>
@@ -212,24 +565,17 @@
 
         function criarElementoCompromisso(compromisso) {
             const elemento = document.createElement('div');
-            elemento.className = 'compromisso-item glass-effect rounded-xl p-4 animate-slide-in';
+            elemento.className = 'compromisso animate-slide-in';
             
-            const categoriasCores = {
-                trabalho: 'from-green-400 to-green-600',
-                pessoal: 'from-blue-400 to-blue-600',
-                estudos: 'from-purple-400 to-purple-600',
-                outros: 'from-gray-400 to-gray-600'
-            };
-
             elemento.innerHTML = `
-                <div class="flex items-center justify-between gap-4">
-                    <span class="categoria-badge px-3 py-1 rounded-full text-sm font-medium text-white bg-gradient-to-r ${categoriasCores[compromisso.categoria]}">
+                <div class="compromisso__content">
+                    <span class="compromisso__categoria compromisso__categoria--${compromisso.categoria}">
                         ${compromisso.categoria}
                     </span>
-                    <span class="text-white font-medium flex-grow">${compromisso.titulo}</span>
-                    <span class="text-white/80 text-sm">${new Date(compromisso.horario).toLocaleString('pt-BR')}</span>
+                    <span class="compromisso__titulo">${compromisso.titulo}</span>
+                    <span class="compromisso__horario">${new Date(compromisso.horario).toLocaleString('pt-BR')}</span>
                     <button onclick="confirmarExclusao(${compromisso.id})" 
-                            class="text-white/80 hover:text-red-400 transition-colors">
+                            class="compromisso__delete">
                         <i class="ri-delete-bin-line text-xl"></i>
                     </button>
                 </div>
@@ -280,6 +626,238 @@
                 criarElementoCompromisso(comp);
             });
         }
+
+        // Adiciona partículas flutuantes
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // Tamanho aleatório
+                const size = Math.random() * 5 + 2;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Posição inicial aleatória
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // Duração e delay aleatórios
+                const duration = Math.random() * 20 + 10;
+                const delay = Math.random() * -20;
+                particle.style.animation = `float ${duration}s ${delay}s infinite linear`;
+                
+                container.appendChild(particle);
+            }
+        }
+
+        // Inicia as partículas quando a página carrega
+        window.addEventListener('load', createParticles);
+
+        // Função para alternar tema
+        function toggleTheme() {
+            const body = document.documentElement;
+            const themeIcon = document.getElementById('theme-icon');
+            const currentTheme = body.getAttribute('data-theme');
+            
+            if (currentTheme === 'light') {
+                body.removeAttribute('data-theme');
+                themeIcon.className = 'ri-sun-line';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                themeIcon.className = 'ri-moon-line';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Carrega tema salvo
+        window.addEventListener('load', () => {
+            const savedTheme = localStorage.getItem('theme');
+            const themeIcon = document.getElementById('theme-icon');
+            
+            if (savedTheme === 'light') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                themeIcon.className = 'ri-moon-line';
+            }
+        });
+
+        // Inicializa o calendário
+        document.addEventListener('DOMContentLoaded', function() {
+            const calendarEl = document.getElementById('calendar');
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'pt-br',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                buttonText: {
+                    today: 'Hoje',
+                    month: 'Mês',
+                    week: 'Semana',
+                    day: 'Dia'
+                },
+                events: compromissos.map(comp => ({
+                    title: comp.titulo,
+                    start: comp.horario,
+                    classNames: [`categoria-${comp.categoria}`],
+                    extendedProps: {
+                        id: comp.id,
+                        categoria: comp.categoria
+                    }
+                })),
+                eventClick: function(info) {
+                    const id = info.event.extendedProps.id;
+                    confirmarExclusao(id);
+                },
+                editable: true,
+                eventDrop: function(info) {
+                    const id = info.event.extendedProps.id;
+                    const novoHorario = info.event.start.toISOString();
+                    atualizarHorarioCompromisso(id, novoHorario);
+                }
+            });
+            calendar.render();
+
+            // Atualiza o calendário quando adicionar novo compromisso
+            window.atualizarCalendario = function() {
+                calendar.removeAllEvents();
+                calendar.addEventSource(compromissos.map(comp => ({
+                    title: comp.titulo,
+                    start: comp.horario,
+                    classNames: [`categoria-${comp.categoria}`],
+                    extendedProps: {
+                        id: comp.id,
+                        categoria: comp.categoria
+                    }
+                })));
+            }
+        });
+
+        // Função para atualizar horário após drag & drop
+        function atualizarHorarioCompromisso(id, novoHorario) {
+            const compromisso = compromissos.find(comp => comp.id === id);
+            if (compromisso) {
+                compromisso.horario = novoHorario;
+                salvarCompromissos();
+                atualizarListaCompromissos();
+            }
+        }
+
+        // Modifica a função adicionarCompromisso para atualizar o calendário
+        const originalAdicionarCompromisso = adicionarCompromisso;
+        adicionarCompromisso = function() {
+            originalAdicionarCompromisso();
+            if (window.atualizarCalendario) {
+                window.atualizarCalendario();
+            }
+        }
     </script>
+
+    <!-- Footer -->
+    <footer class="mt-12 glass-effect rounded-t-2xl">
+        <div class="max-w-7xl mx-auto px-4 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Logo e Descrição -->
+                <div class="space-y-4">
+                    <div class="flex items-center gap-2">
+                        <i class="ri-calendar-2-fill text-3xl text-white"></i>
+                        <span class="text-xl font-bold text-white">AgendaPro</span>
+                    </div>
+                    <p class="text-white/70 text-sm">
+                        Organize seu tempo de forma inteligente com a melhor ferramenta de agenda online.
+                    </p>
+                </div>
+
+                <!-- Links Rápidos -->
+                <div>
+                    <h3 class="text-white font-semibold mb-4">Links Rápidos</h3>
+                    <ul class="space-y-2">
+                        <li>
+                            <a href="#" class="text-white/70 hover:text-white transition-colors text-sm flex items-center gap-2">
+                                <i class="ri-arrow-right-s-line"></i>
+                                <span>Início</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="text-white/70 hover:text-white transition-colors text-sm flex items-center gap-2">
+                                <i class="ri-arrow-right-s-line"></i>
+                                <span>Calendário</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="text-white/70 hover:text-white transition-colors text-sm flex items-center gap-2">
+                                <i class="ri-arrow-right-s-line"></i>
+                                <span>Configurações</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="notas.html" class="text-white/70 hover:text-white transition-colors text-sm flex items-center gap-2">
+                                <i class="ri-sticky-note-line"></i>
+                                <span>Minhas Notas</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Contato -->
+                <div>
+                    <h3 class="text-white font-semibold mb-4">Contato</h3>
+                    <ul class="space-y-2">
+                        <li>
+                            <a href="mailto:contato@agendapro.com" class="text-white/70 hover:text-white transition-colors text-sm flex items-center gap-2">
+                                <i class="ri-mail-line"></i>
+                                <span>contato@agendapro.com</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="tel:+551199999999" class="text-white/70 hover:text-white transition-colors text-sm flex items-center gap-2">
+                                <i class="ri-phone-line"></i>
+                                <span>(11) 9999-9999</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="text-white/70 hover:text-white transition-colors text-sm flex items-center gap-2">
+                                <i class="ri-map-pin-line"></i>
+                                <span>São Paulo, SP</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Redes Sociais -->
+                <div>
+                    <h3 class="text-white font-semibold mb-4">Redes Sociais</h3>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center text-white">
+                            <i class="ri-facebook-fill"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center text-white">
+                            <i class="ri-twitter-fill"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center text-white">
+                            <i class="ri-instagram-fill"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center text-white">
+                            <i class="ri-linkedin-fill"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Linha divisória -->
+            <div class="h-px bg-white/10 my-8"></div>
+
+            <!-- Copyright -->
+            <div class="text-center text-white/70 text-sm">
+                © 2024 AgendaPro. Todos os direitos reservados.
+            </div>
+        </div>
+    </footer>
 </body>
 </html> 

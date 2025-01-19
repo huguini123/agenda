@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas Notas - AgendaPro</title>
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📝</text></svg>">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@5/dark.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Remix Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos base herdados do index.html */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #667eea, #764ba2, #6B8DD6, #8E37D7);
+            background-size: 400% 400%;
+            z-index: -1;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+
+        /* Estilos específicos para notas */
+        .notas {
+            max-width: 56rem;
+            margin: 0 auto;
+        }
+
+        .notas__header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .notas__title {
+            font-size: 2.25rem;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .notas__form {
+            margin-bottom: 2rem;
+        }
+
+        .notas__input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .notas__input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .notas__button {
+            background: linear-gradient(to right, rgb(168, 85, 247), rgb(236, 72, 153));
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+
+        .notas__button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .nota {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+
+        .nota:hover {
+            transform: translateY(-2px);
+        }
+
+        .nota__content {
+            color: white;
+            white-space: pre-wrap;
+            margin-bottom: 1rem;
+        }
+
+        .nota__footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.875rem;
+        }
+
+        .nota__delete {
+            color: rgba(255, 255, 255, 0.8);
+            transition: color 0.3s;
+        }
+
+        .nota__delete:hover {
+            color: rgb(248, 113, 113);
+        }
+    </style>
+</head>
+<body class="p-4">
+    <!-- Header -->
+    <header class="header glass-effect">
+        <nav class="header__nav">
+            <div class="flex items-center justify-between">
+                <div class="header__logo">
+                    <i class="ri-sticky-note-line text-3xl text-white"></i>
+                    <span class="text-xl font-bold text-white">Minhas Notas</span>
+                </div>
+                
+                <div class="header__menu">
+                    <a href="index.html" class="text-white/80 hover:text-white transition-colors flex items-center gap-2">
+                        <i class="ri-arrow-left-line"></i>
+                        <span>Voltar para Agenda</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Espaçamento para compensar o header fixo -->
+    <div class="h-20"></div>
+
+    <!-- Conteúdo principal -->
+    <div class="notas glass-effect rounded-2xl p-8 animate__animated animate__fadeIn">
+        <div class="notas__header">
+            <h1 class="notas__title">Minhas Notas</h1>
+            <p class="text-white/80">Organize suas ideias e lembretes</p>
+        </div>
+
+        <div class="notas__form">
+            <textarea id="nota-texto" 
+                      class="notas__input" 
+                      placeholder="Digite sua nota aqui..."></textarea>
+            
+            <button onclick="adicionarNota()" class="notas__button">
+                <i class="ri-add-line"></i>
+                Adicionar Nota
+            </button>
+        </div>
+
+        <div id="lista-notas" class="space-y-4">
+            <!-- Notas serão adicionadas aqui -->
+        </div>
+    </div>
+
+    <script>
+        // Carrega notas do localStorage
+        let notas = JSON.parse(localStorage.getItem('notas')) || [];
+        
+        // Renderiza notas salvas
+        window.onload = function() {
+            notas.forEach(nota => {
+                criarElementoNota(nota);
+            });
+        }
+
+        function adicionarNota() {
+            const texto = document.getElementById('nota-texto').value;
+            
+            if (!texto.trim()) {
+                Swal.fire({
+                    title: 'Ops!',
+                    text: 'Por favor, escreva algo na nota!',
+                    icon: 'warning',
+                    confirmButtonColor: '#9333ea'
+                });
+                return;
+            }
+
+            const novaNota = {
+                id: Date.now(),
+                texto,
+                data: new Date().toISOString()
+            };
+
+            notas.push(novaNota);
+            salvarNotas();
+            criarElementoNota(novaNota);
+            
+            // Limpa o campo
+            document.getElementById('nota-texto').value = '';
+
+            // Notificação de sucesso
+            Swal.fire({
+                title: 'Sucesso!',
+                text: 'Nota adicionada com sucesso!',
+                icon: 'success',
+                confirmButtonColor: '#9333ea',
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }
+
+        function criarElementoNota(nota) {
+            const elemento = document.createElement('div');
+            elemento.className = 'nota animate__animated animate__fadeIn';
+            
+            elemento.innerHTML = `
+                <div class="nota__content">${nota.texto}</div>
+                <div class="nota__footer">
+                    <span>${new Date(nota.data).toLocaleString('pt-BR')}</span>
+                    <button onclick="confirmarExclusaoNota(${nota.id})" 
+                            class="nota__delete">
+                        <i class="ri-delete-bin-line text-xl"></i>
+                    </button>
+                </div>
+            `;
+
+            document.getElementById('lista-notas').prepend(elemento);
+        }
+
+        function confirmarExclusaoNota(id) {
+            Swal.fire({
+                title: 'Tem certeza?',
+                text: "Você não poderá recuperar esta nota!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#9333ea',
+                confirmButtonText: 'Sim, excluir!',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    excluirNota(id);
+                    Swal.fire({
+                        title: 'Excluída!',
+                        text: 'Sua nota foi excluída.',
+                        icon: 'success',
+                        confirmButtonColor: '#9333ea',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                }
+            });
+        }
+
+        function excluirNota(id) {
+            notas = notas.filter(nota => nota.id !== id);
+            salvarNotas();
+            atualizarListaNotas();
+        }
+
+        function salvarNotas() {
+            localStorage.setItem('notas', JSON.stringify(notas));
+        }
+
+        function atualizarListaNotas() {
+            const lista = document.getElementById('lista-notas');
+            lista.innerHTML = '';
+            notas.forEach(nota => {
+                criarElementoNota(nota);
+            });
+        }
+    </script>
+</body>
+</html> 
