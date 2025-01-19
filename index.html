@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Agenda</title>
+    <style>
+        .agenda-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .agenda-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .compromissos {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .novo-compromisso {
+            margin-bottom: 20px;
+        }
+
+        .compromisso-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .compromisso-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .botao-adicionar {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="agenda-container">
+        <div class="agenda-header">
+            <h1>Minha Agenda</h1>
+            <p>Data: <span id="data-atual"></span></p>
+        </div>
+
+        <div class="novo-compromisso">
+            <input type="text" id="titulo" placeholder="Título do compromisso">
+            <input type="datetime-local" id="horario">
+            <button class="botao-adicionar" onclick="adicionarCompromisso()">Adicionar</button>
+        </div>
+
+        <div class="compromissos" id="lista-compromissos">
+            <!-- Compromissos serão adicionados aqui -->
+        </div>
+    </div>
+
+    <script>
+        // Atualiza a data atual
+        document.getElementById('data-atual').textContent = new Date().toLocaleDateString('pt-BR');
+
+        function adicionarCompromisso() {
+            const titulo = document.getElementById('titulo').value;
+            const horario = document.getElementById('horario').value;
+            
+            if (!titulo || !horario) {
+                alert('Por favor, preencha todos os campos!');
+                return;
+            }
+
+            const compromisso = document.createElement('div');
+            compromisso.className = 'compromisso-item';
+            compromisso.innerHTML = `
+                <span>${titulo}</span>
+                <span>${new Date(horario).toLocaleString('pt-BR')}</span>
+                <button onclick="this.parentElement.remove()">Excluir</button>
+            `;
+
+            document.getElementById('lista-compromissos').appendChild(compromisso);
+            
+            // Limpa os campos
+            document.getElementById('titulo').value = '';
+            document.getElementById('horario').value = '';
+        }
+    </script>
+</body>
+</html> 
