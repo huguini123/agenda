@@ -86,6 +86,41 @@
     </style>
 </head>
 <body class="p-4">
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 glass-effect">
+        <nav class="max-w-7xl mx-auto px-4 py-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <i class="ri-calendar-2-fill text-3xl text-white"></i>
+                    <span class="text-xl font-bold text-white">AgendaPro</span>
+                </div>
+                
+                <div class="flex items-center gap-6">
+                    <a href="#" class="text-white/80 hover:text-white transition-colors flex items-center gap-2">
+                        <i class="ri-home-4-line"></i>
+                        <span>Início</span>
+                    </a>
+                    <a href="#" class="text-white/80 hover:text-white transition-colors flex items-center gap-2">
+                        <i class="ri-calendar-line"></i>
+                        <span>Calendário</span>
+                    </a>
+                    <a href="#" class="text-white/80 hover:text-white transition-colors flex items-center gap-2">
+                        <i class="ri-settings-4-line"></i>
+                        <span>Configurações</span>
+                    </a>
+                    <button class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
+                        <i class="ri-user-line"></i>
+                        <span>Perfil</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Espaçamento para compensar o header fixo -->
+    <div class="h-20"></div>
+
+    <!-- Conteúdo principal -->
     <div class="max-w-4xl mx-auto glass-effect rounded-2xl p-8 animate__animated animate__fadeIn">
         <div class="text-center mb-8">
             <h1 class="text-4xl font-bold text-white mb-2">Minha Agenda</h1>
